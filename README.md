@@ -97,4 +97,59 @@ end
 
 11. Add styling to the app on app/assets/stylesheets/application.css
 
+## Rails Params 1/26/24 
 
+## Goal
+- greeting: Pass information to the view so we can greet multiple users
+- square: Square the data
+
+## Process
+1. Create a controller  
+`$ rails g controller Main`
+
+2. Add a method to the controller class for each page
+  - Add instance variable to store the applicable param
+  ```rb
+    # if just using the params key word, the hash will be sent to the user
+    @user_name = params
+    # output: {"controller"=>"main", "action"=>"greeting", "user_name"=>"jimmy"}
+  ```
+  - Use bracket notation to abstract the value from the symbol in the params hash
+```rb
+class MainController < ApplicationController
+  def greeting
+    @user_name = params[:user_name]
+  end
+end
+```
+
+3. Invoke the controller method by creating a route on config/routes.rb
+
+4. Create a view file for each method on app/views/main
+- Use ERB to reference the instance variable
+`<h1>Aloha <%= @user_name %></h1>`
+
+5. Verify the response by typing the url in the browser  
+
+6. Two ways to receive a value for the instance variable
+- Pass a query string into the URL
+`http://localhost:3000/greeting?user_name=india23`
+- Modify the route to require a param on the url and make sure the url is reflecting that structure
+
+7. Repeat steps 2-6 for the next page
+
+8. When performing arithmetic operations, make sure to change param to an integer
+```html
+<h3>Let's be a Square</h3>
+<h3>Your number is now <%= @number.to_i * @number.to_i%></h3>
+```
+
+- Refactor
+```rb
+# place calculation in the method (app/controllers/main_controller.rb)
+  def square
+    @number = params[:number].to_i * params[:number].to_i 
+  end
+# reference the instance variable on the views file (app/views/main/square.html.erb)
+`<h3>Your number is now <%= @number %></h3>`
+```
